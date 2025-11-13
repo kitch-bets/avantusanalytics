@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avantus Analytics - Jets vs Patriots TNF Week 11</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #e4e4e7;
+            line-height: 1.6;
+        }
+
+        .header-bg {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            border-bottom: 2px solid #2dd4bf;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(45, 212, 191, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2dd4bf 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            color: #94a3b8;
+            font-size: 0.95em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #f1f5f9;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #2dd4bf;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #2dd4bf;
+            font-size: 1.6em;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #2dd4bf, #6366f1);
+            margin-right: 12px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+
+        .game-info {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-left: 4px solid #2dd4bf;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-info h3 {
+            color: #2dd4bf;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .game-info p {
+            color: #cbd5e1;
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .game-info strong {
+            color: #f1f5f9;
+        }
+
+        .bet-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .bet-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(45, 212, 191, 0.2);
+            border-color: #2dd4bf;
+        }
+
+        .bet-card.featured {
+            border: 2px solid #2dd4bf;
+            background: linear-gradient(135deg, #1e293b 0%, #134e4a 100%);
+            box-shadow: 0 0 30px rgba(45, 212, 191, 0.3);
+        }
+
+        .bet-card.strong {
+            border: 2px solid #6366f1;
+            background: linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .bet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .bet-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #f1f5f9;
+            flex: 1;
+        }
+
+        .odds {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2dd4bf 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: #2dd4bf;
+            background: rgba(45, 212, 191, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2dd4bf;
+        }
+
+        .stat-value.positive {
+            color: #22c55e;
+        }
+
+        .reasoning {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        .reasoning h4 {
+            color: #cbd5e1;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .reasoning ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .reasoning li {
+            color: #94a3b8;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .reasoning li strong {
+            color: #f1f5f9;
+        }
+
+        .reasoning p {
+            color: #cbd5e1;
+            margin: 10px 0;
+        }
+
+        .alert {
+            background: linear-gradient(135deg, #422006 0%, #1e293b 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 18px;
+            margin: 20px 0;
+            color: #fbbf24;
+        }
+
+        .alert strong {
+            color: #fcd34d;
+        }
+
+        .parlay-box {
+            background: linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%);
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .parlay-box h3 {
+            color: #6366f1;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .parlay-box h4 {
+            color: #cbd5e1;
+            font-size: 1.1em;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .parlay-box ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        .parlay-box li {
+            color: #94a3b8;
+            margin: 8px 0;
+        }
+
+        .parlay-box p {
+            color: #cbd5e1;
+            margin: 8px 0;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #450a0a 0%, #1e293b 100%);
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+
+        .disclaimer h4 {
+            color: #fca5a5;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .disclaimer p {
+            color: #cbd5e1;
+            margin: 10px 0;
+        }
+
+        .disclaimer strong {
+            color: #f1f5f9;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .tag.best-bet {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .tag.strong {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .tag.value {
+            background: linear-gradient(135deg, #0891b2, #06b6d4);
+            color: white;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        thead tr {
+            background: linear-gradient(135deg, #2dd4bf, #6366f1);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+            color: #cbd5e1;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(45, 212, 191, 0.05);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid #334155;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        .footer strong {
+            color: #2dd4bf;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #334155, transparent);
+            margin: 40px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .header-bg {
+                background: white;
+                border-bottom: 2px solid black;
+            }
+            .bet-card, .game-info {
+                border: 1px solid black;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2em;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            .bet-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .odds {
+                font-size: 1.5em;
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bg">
+        <div class="container">
+            <div class="logo-section">
+                <div class="logo">AVANTUS ANALYTICS</div>
+                <div class="tagline">Advanced Sports Betting Intelligence</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Jets vs Patriots - Thursday Night Football Week 11</h1>
+        <p class="subtitle">Predictive Analysis & High-Value Betting Recommendations | Generated: November 13, 2025</p>
+
+        <div class="game-info">
+            <h3>Game Overview</h3>
+            <p><strong>Matchup:</strong> New York Jets @ New England Patriots</p>
+            <p><strong>Kickoff:</strong> Tonight 8:15 PM ET</p>
+            <p><strong>Spread:</strong> Patriots -12.5 | <strong>Total:</strong> 43.5 | <strong>Moneyline:</strong> Patriots -950</p>
+            <p><strong>Projected Team Totals:</strong> Patriots 27.5 | Jets 14.5</p>
+        </div>
+
+        <h2>Top Recommended Bets</h2>
+
+        <!-- BET 1: MACK HOLLINS -->
+        <div class="bet-card featured">
+            <div class="bet-header">
+                <div class="bet-title">
+                    <span class="tag best-bet">Best Bet</span>
+                    Mack Hollins UNDER 39.5 Receiving Yards
+                </div>
+                <div class="odds">+100</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Edge</div>
+                    <div class="stat-value positive">+40.6%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Projection</div>
+                    <div class="stat-value">27.5 yds</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Hit Rate</div>
+                    <div class="stat-value">70%</div>
+                </div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li><strong>Highest edge</strong> of all available props at +40.6%</li>
+                    <li>Projected for only 27.5 yards - <strong>12 yards below the line</strong></li>
+                    <li>Season average: 32.3 yards (still well below 39.5)</li>
+                    <li>Cover probability: 66.7% at even money (+100)</li>
+                    <li>WR matchup rated as FAIR, historical under hit rate of 7/10</li>
+                </ul>
+                <p><strong>Recommended Unit Size:</strong> 1.5-2 units (Best Bet)</p>
+            </div>
+        </div>
+
+        <!-- BET 2: BREECE HALL -->
+        <div class="bet-card strong">
+            <div class="bet-header">
+                <div class="bet-title">
+                    <span class="tag strong">Strong Value</span>
+                    Breece Hall OVER 2.5 Receptions
+                </div>
+                <div class="odds">+122</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Edge</div>
+                    <div class="stat-value">+10.9%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Target Rate</div>
+                    <div class="stat-value">19.8%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Catch Rate</div>
+                    <div class="stat-value">86.4%</div>
+                </div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li>Jets expected to trail by 2+ scores (12.5-point underdogs)</li>
+                    <li>Hall has <strong>19.8% target rate when trailing</strong> (2nd highest on team)</li>
+                    <li>Elite <strong>86.4% catch rate</strong> in trailing game scripts</li>
+                    <li>Patriots ranked <strong>#32 (WORST)</strong> vs RB receptions (59 allowed)</li>
+                    <li>Patriots ranked <strong>#1 vs RB rushing</strong> - forces checkdowns</li>
+                    <li>Garrett Wilson injured - Hall becomes primary option</li>
+                    <li>RB matchup rated as GOOD</li>
+                </ul>
+                <p><strong>Game Script Perfect:</strong> 19 receptions already this season in trailing situations</p>
+                <p><strong>Recommended Unit Size:</strong> 1-1.5 units</p>
+            </div>
+        </div>
+
+        <!-- BET 3: MACK HOLLINS RECEPTIONS -->
+        <div class="bet-card">
+            <div class="bet-header">
+                <div class="bet-title">
+                    <span class="tag value">Value Play</span>
+                    Mack Hollins UNDER 3.5 Receptions
+                </div>
+                <div class="odds">-130</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Edge</div>
+                    <div class="stat-value">+21.0%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Projection</div>
+                    <div class="stat-value">2.63 rec</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Hit Rate</div>
+                    <div class="stat-value">70%</div>
+                </div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li>Projected 2.63 receptions - nearly a full catch below the line</li>
+                    <li>Season average: 2.6 receptions</li>
+                    <li>Cover probability: 68.4% despite -130 juice</li>
+                    <li>Strong +21% edge per analytics model</li>
+                </ul>
+                <p><strong>Recommended Unit Size:</strong> 1 unit</p>
+            </div>
+        </div>
+
+        <!-- BET 4: KYLE WILLIAMS -->
+        <div class="bet-card">
+            <div class="bet-header">
+                <div class="bet-title">
+                    <span class="tag value">Value Play</span>
+                    Kyle Williams UNDER 22.5 Receiving Yards
+                </div>
+                <div class="odds">-115</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Edge</div>
+                    <div class="stat-value">+20.1%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Projection</div>
+                    <div class="stat-value">14.5 yds</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Hit Rate</div>
+                    <div class="stat-value positive">90%</div>
+                </div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li><strong>90% historical under hit rate</strong> (9 of last 10 games)</li>
+                    <li>Season average: only 9.2 yards</li>
+                    <li>Projection: 14.5 yards (8 yards below line)</li>
+                    <li>WR matchup rated as POOR</li>
+                    <li>Cover probability: 64.2%</li>
+                </ul>
+                <p><strong>Recommended Unit Size:</strong> 1 unit</p>
+            </div>
+        </div>
+
+        <!-- BET 5: TERRELL JENNINGS -->
+        <div class="bet-card">
+            <div class="bet-header">
+                <div class="bet-title">
+                    <span class="tag value">Solid Play</span>
+                    Terrell Jennings UNDER 26.5 Rush Yards
+                </div>
+                <div class="odds">-115</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Edge</div>
+                    <div class="stat-value">+13.2%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Projection</div>
+                    <div class="stat-value">14.5 yds</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Hit Rate</div>
+                    <div class="stat-value">87.5%</div>
+                </div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li>Projected 14.5 yards vs 26.5 line - nearly double</li>
+                    <li>Season average: only 13.3 rushing yards</li>
+                    <li>Under hit rate: 87.5% (7 of 8 games)</li>
+                    <li>RB matchup rated as POOR</li>
+                    <li>Cover probability: 71.2%</li>
+                </ul>
+                <p><strong>Recommended Unit Size:</strong> 0.75-1 unit</p>
+            </div>
+        </div>
+
+        <!-- DRAKE MAYE ANALYSIS -->
+        <h2>Drake Maye Props Analysis</h2>
+
+        <div class="alert">
+            <strong>Game Script Consideration:</strong> Patriots favored by 12.5 points. Expect them to get up big early and potentially run the clock in the second half, which could limit Maye's passing volume late.
+        </div>
+
+        <div class="bet-card">
+            <div class="bet-header">
+                <div class="bet-title">Drake Maye Passing Yards UNDER 232.5</div>
+                <div class="odds">-112</div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li><strong>Main Line:</strong> 232.5 yards with even juice both ways</li>
+                    <li><strong>Expected Game Script:</strong> Patriots up big → run-heavy 2nd half</li>
+                    <li><strong>Passing Attempts:</strong> O 28.5 (+104) suggests moderate volume</li>
+                    <li><strong>Risk:</strong> If game stays competitive, he could easily exceed 240 yards</li>
+                </ul>
+                <p><strong>Alternative:</strong> Maye Pass + Rush O 262.5 (-113) adds rushing floor (27.5 rush yards expected)</p>
+                <p><strong>Recommended Unit Size:</strong> 0.5-0.75 units on either (lean Pass+Rush over for safety)</p>
+            </div>
+        </div>
+
+        <div class="bet-card">
+            <div class="bet-header">
+                <div class="bet-title">Drake Maye Anytime Touchdown</div>
+                <div class="odds">+195</div>
+            </div>
+            <div class="reasoning">
+                <h4>Analysis:</h4>
+                <ul>
+                    <li>Mobile QB with 27.5 rush yard line (O -110)</li>
+                    <li>Patriots likely to use him in red zone QB sneaks/designed runs</li>
+                    <li>Positive game script increases red zone opportunities</li>
+                    <li>Good value at +195 for a mobile QB in positive game script</li>
+                </ul>
+                <p><strong>Recommended Unit Size:</strong> 0.5 units (lottery ticket value play)</p>
+            </div>
+        </div>
+
+        <!-- PARLAY SUGGESTIONS -->
+        <div class="parlay-box">
+            <h3>Recommended Parlay Combinations</h3>
+
+            <h4>Conservative 3-Leg Under Parlay:</h4>
+            <ul>
+                <li>Mack Hollins Rec Yds U39.5 (+100)</li>
+                <li>Kyle Williams Rec Yds U22.5 (-115)</li>
+                <li>Terrell Jennings Rush Yds U26.5 (-115)</li>
+            </ul>
+            <p><strong>Combined Odds:</strong> ~+450</p>
+            <p><strong>Rationale:</strong> All three have 20%+ edge and 70%+ hit rates. Strong correlation as all benefit from limited offensive production.</p>
+
+            <h4>Value 2-Leg Parlay:</h4>
+            <ul>
+                <li>Breece Hall O 2.5 Receptions (+122)</li>
+                <li>Mack Hollins U 39.5 Rec Yards (+100)</li>
+            </ul>
+            <p><strong>Combined Odds:</strong> ~+425</p>
+            <p><strong>Rationale:</strong> Top two edges combined. Hall benefits from trailing game script, Hollins projected well below line.</p>
+
+            <h4>Drake Maye Special:</h4>
+            <ul>
+                <li>Drake Maye Pass + Rush O 262.5 (-113)</li>
+                <li>Drake Maye Anytime TD (+195)</li>
+                <li>Patriots Team Total O 27.5 (-118)</li>
+            </ul>
+            <p><strong>Combined Odds:</strong> ~+900</p>
+            <p><strong>Rationale:</strong> Positive game script parlay. If Patriots dominate, all three hit.</p>
+        </div>
+
+        <!-- BETTING SUMMARY -->
+        <h2>Betting Strategy Summary</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Bet</th>
+                    <th style="text-align: center;">Odds</th>
+                    <th style="text-align: center;">Edge</th>
+                    <th style="text-align: center;">Units</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Mack Hollins U39.5 Rec Yds</td>
+                    <td style="text-align: center;">+100</td>
+                    <td style="text-align: center; color: #22c55e; font-weight: bold;">+40.6%</td>
+                    <td style="text-align: center;">1.5-2u</td>
+                </tr>
+                <tr>
+                    <td>Breece Hall O2.5 Receptions</td>
+                    <td style="text-align: center;">+122</td>
+                    <td style="text-align: center; color: #22c55e; font-weight: bold;">+10.9%</td>
+                    <td style="text-align: center;">1-1.5u</td>
+                </tr>
+                <tr>
+                    <td>Mack Hollins U3.5 Receptions</td>
+                    <td style="text-align: center;">-130</td>
+                    <td style="text-align: center; color: #22c55e; font-weight: bold;">+21.0%</td>
+                    <td style="text-align: center;">1u</td>
+                </tr>
+                <tr>
+                    <td>Kyle Williams U22.5 Rec Yds</td>
+                    <td style="text-align: center;">-115</td>
+                    <td style="text-align: center; color: #22c55e; font-weight: bold;">+20.1%</td>
+                    <td style="text-align: center;">1u</td>
+                </tr>
+                <tr>
+                    <td>Terrell Jennings U26.5 Rush Yds</td>
+                    <td style="text-align: center;">-115</td>
+                    <td style="text-align: center; color: #22c55e; font-weight: bold;">+13.2%</td>
+                    <td style="text-align: center;">0.75-1u</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- DISCLAIMER -->
+        <div class="disclaimer">
+            <h4>Disclaimer & Risk Management</h4>
+            <p><strong>Bet Responsibly:</strong> These are analytical recommendations based on statistical models, edge calculations, and game script analysis. No bet is guaranteed, and past performance does not guarantee future results.</p>
+            <p><strong>Bankroll Management:</strong> Never bet more than you can afford to lose. Recommended unit sizing assumes proper bankroll management (1 unit = 1-2% of total bankroll).</p>
+            <p><strong>Line Shopping:</strong> Odds may vary by sportsbook. Always shop for the best line. Even a half-point or +5 odds can significantly impact long-term profitability.</p>
+            <p><strong>Injury Updates:</strong> Check for last-minute injury reports before placing bets. Justin Fields vs Tyrod Taylor starting QB could impact Jets props significantly.</p>
+            <p style="margin-bottom: 0;"><strong>For Entertainment Purposes:</strong> This analysis is for informational and entertainment purposes only. Gambling involves risk. If you or someone you know has a gambling problem, call 1-800-GAMBLER.</p>
+        </div>
+
+        <hr>
+
+        <div class="footer">
+            <p><strong>AVANTUS ANALYTICS</strong></p>
+            <p>Advanced Sports Betting Intelligence</p>
+            <p>Analysis generated on November 13, 2025</p>
+            <p>Jets vs Patriots - Thursday Night Football Week 11</p>
+            <p style="margin-top: 15px;"><strong>Good luck and bet responsibly!</strong></p>
+        </div>
+    </div>
+</body>
+</html>
