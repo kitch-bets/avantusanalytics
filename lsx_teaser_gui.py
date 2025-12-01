@@ -8,6 +8,7 @@ from tkinter import ttk, messagebox
 import json
 import requests
 from typing import Optional, Dict, List, Tuple
+from itertools import combinations
 
 
 APP_TITLE = "NFL Teaser Builder - LSX Analytics"
@@ -111,7 +112,7 @@ class TeaserApp:
     def __init__(self, root):
         self.root = root
         root.title(APP_TITLE)
-        root.geometry("1300x700")
+        root.geometry("1400x900")
 
         # Set color scheme
         style = ttk.Style()
@@ -258,8 +259,51 @@ class TeaserApp:
         table_frame.rowconfigure(0, weight=1)
         table_frame.columnconfigure(0, weight=1)
 
-        # ===== BOTTOM: EV CALCULATOR =====
-        ev_frame = ttk.LabelFrame(self.root, text="2-Leg Teaser EV Calculator")
+        # ===== BETTING RECOMMENDATIONS FRAME =====
+        rec_frame = ttk.LabelFrame(self.root, text="🎯 Betting Recommendations")
+        rec_frame.pack(fill="both", expand=True, padx=10, pady=5)
+
+        # Button to generate recommendations
+        btn_frame = ttk.Frame(rec_frame)
+        btn_frame.pack(fill="x", padx=5, pady=5)
+
+        self.btn_generate = ttk.Button(
+            btn_frame,
+            text="Generate Best Teasers",
+            command=self.generate_best_teasers,
+            width=25
+        )
+        self.btn_generate.pack(side="left", padx=5)
+
+        ttk.Label(
+            btn_frame,
+            text="← Click to auto-generate optimal teaser combinations"
+        ).pack(side="left", padx=5)
+
+        # Text widget for recommendations
+        text_frame = ttk.Frame(rec_frame)
+        text_frame.pack(fill="both", expand=True, padx=5, pady=5)
+
+        self.txt_recommendations = tk.Text(
+            text_frame,
+            height=8,
+            width=80,
+            wrap="word",
+            font=("Courier", 10),
+            bg="#f8f9fa"
+        )
+        self.txt_recommendations.pack(side="left", fill="both", expand=True)
+
+        rec_scrollbar = ttk.Scrollbar(text_frame, orient="vertical", command=self.txt_recommendations.yview)
+        rec_scrollbar.pack(side="right", fill="y")
+        self.txt_recommendations.configure(yscrollcommand=rec_scrollbar.set)
+
+        # Default message
+        self.txt_recommendations.insert("1.0", "Click 'Generate Best Teasers' to see optimal betting recommendations.\n\nThe app will analyze all qualified legs and show you the best combinations ranked by expected value.")
+        self.txt_recommendations.config(state="disabled")
+
+        # ===== BOTTOM: MANUAL EV CALCULATOR =====
+        ev_frame = ttk.LabelFrame(self.root, text="Manual EV Calculator (Optional)")
         ev_frame.pack(fill="x", padx=10, pady=10)
 
         ttk.Label(
@@ -400,6 +444,156 @@ class TeaserApp:
             "Filters Complete",
             f"Found {qualified_count} qualified teaser legs out of {len(self.games)} total"
         )
+
+    def generate_best_teasers(self):
+        """
+        Auto-generate optimal teaser combinations and display clear betting recommendations
+        """
+        # Get teaser odds
+        try:
+            odds = int(self.entry_odds.get())
+            dec = american_to_decimal(odds)
+            profit_per_unit = dec - 1.0
+            be = break_even_prob(odds)
+        except Exception as e:
+            messagebox.showerror("Invalid Odds", f"Could not parse teaser odds: {e}")
+            return
+
+        # Get all qualified games
+        qualified = [g for g in self.games if g["qualifies"]]
+
+        if len(qualified) < 2:
+            self.txt_recommendations.config(state="normal")
+            self.txt_recommendations.delete("1.0", tk.END)
+            self.txt_recommendations.insert(
+                "1.0",
+                f"❌ NOT ENOUGH QUALIFIED LEGS\n\n"
+                f"Found only {len(qualified)} qualified leg(s).\n"
+                f"Need at least 2 to create a teaser.\n\n"
+                f"Try:\n"
+                f"• Fetching more games\n"
+                f"• Adjusting your model probability\n"
+                f"• Waiting for better lines"
+            )
+            self.txt_recommendations.config(state="disabled")
+            return
+
+        # Generate all possible 2-leg combinations
+        combos = list(combinations(qualified, 2))
+
+        # Calculate EV for each combination
+        results = []
+        for leg1, leg2 in combos:
+            p_win = leg1["prob"] * leg2["prob"]
+            ev = p_win * profit_per_unit - (1 - p_win) * 1.0
+            edge = p_win - be
+
+            results.append({
+                "leg1": leg1,
+                "leg2": leg2,
+                "p_win": p_win,
+                "ev": ev,
+                "edge": edge
+            })
+
+        # Sort by EV (highest first)
+        results.sort(key=lambda x: x["ev"], reverse=True)
+
+        # Display recommendations
+        self.txt_recommendations.config(state="normal")
+        self.txt_recommendations.delete("1.0", tk.END)
+
+        # Header
+        header = f"{'='*90}\n"
+        header += f"TEASER BETTING RECOMMENDATIONS (2-Leg at {odds:+d})\n"
+        header += f"{'='*90}\n"
+        header += f"Break-even: {be:.2%} | Found {len(results)} possible combinations\n"
+        header += f"{'='*90}\n\n"
+
+        self.txt_recommendations.insert(tk.END, header)
+
+        # Show top 5 (or all if less than 5)
+        max_show = min(5, len(results))
+        positive_ev_count = sum(1 for r in results if r["ev"] > 0)
+
+        for i, r in enumerate(results[:max_show], 1):
+            leg1 = r["leg1"]
+            leg2 = r["leg2"]
+
+            # Determine verdict
+            if r["ev"] > 0:
+                verdict = "✓ BET THIS"
+                verdict_emoji = "🟢"
+            elif r["ev"] == 0:
+                verdict = "⚠ BREAKEVEN"
+                verdict_emoji = "🟡"
+            else:
+                verdict = "✗ PASS"
+                verdict_emoji = "🔴"
+
+            # Format the recommendation
+            rec = f"{verdict_emoji} TEASER #{i}\n"
+            rec += f"{'-'*90}\n"
+
+            # Leg 1
+            rec += f"Leg 1: Take {leg1['game']} {leg1['teased_line']:+.1f}\n"
+            rec += f"       (Teased from {leg1['spread']:+.1f}, Win Prob: {leg1['prob']:.1%})\n\n"
+
+            # Leg 2
+            rec += f"Leg 2: Take {leg2['game']} {leg2['teased_line']:+.1f}\n"
+            rec += f"       (Teased from {leg2['spread']:+.1f}, Win Prob: {leg2['prob']:.1%})\n\n"
+
+            # Analysis
+            rec += f"Combined Win Probability: {r['p_win']:.2%}\n"
+            rec += f"Expected Value: {r['ev']:+.5f} units per $1 risked\n"
+            rec += f"Edge vs Break-even: {r['edge']:+.2%}\n"
+            rec += f"Verdict: {verdict}\n"
+            rec += f"\n"
+
+            self.txt_recommendations.insert(tk.END, rec)
+
+        # Summary
+        summary = f"\n{'='*90}\n"
+        summary += f"SUMMARY\n"
+        summary += f"{'='*90}\n"
+        summary += f"Total Qualified Legs: {len(qualified)}\n"
+        summary += f"Total Possible Teasers: {len(results)}\n"
+        summary += f"Positive EV Teasers: {positive_ev_count}\n"
+        summary += f"Negative EV Teasers: {len(results) - positive_ev_count}\n\n"
+
+        if positive_ev_count > 0:
+            summary += f"🎯 RECOMMENDATION: "
+            if positive_ev_count == 1:
+                summary += f"Bet the 1 positive EV teaser listed above.\n"
+            else:
+                summary += f"Consider the top {min(3, positive_ev_count)} positive EV teasers.\n"
+                summary += f"   Diversifying across multiple +EV teasers reduces variance.\n"
+        else:
+            summary += f"❌ RECOMMENDATION: No positive EV teasers this week. PASS.\n"
+
+        self.txt_recommendations.insert(tk.END, summary)
+        self.txt_recommendations.config(state="disabled")
+
+        # Also show a popup summary
+        if positive_ev_count > 0:
+            best = results[0]
+            messagebox.showinfo(
+                "Teaser Recommendations Generated",
+                f"✅ Found {positive_ev_count} positive EV teaser(s)!\n\n"
+                f"Best Teaser:\n"
+                f"Leg 1: {best['leg1']['game']} {best['leg1']['teased_line']:+.1f}\n"
+                f"Leg 2: {best['leg2']['game']} {best['leg2']['teased_line']:+.1f}\n\n"
+                f"EV: {best['ev']:+.5f} units\n"
+                f"Win Prob: {best['p_win']:.2%}\n\n"
+                f"See recommendations panel for details."
+            )
+        else:
+            messagebox.showinfo(
+                "No Positive EV Teasers",
+                f"Analyzed {len(results)} possible teasers.\n\n"
+                f"❌ None have positive expected value at {odds:+d}.\n\n"
+                f"Recommendation: PASS this week."
+            )
 
     def fetch_odds(self):
         """
