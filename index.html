@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Upper Split" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Upper Body Split</title>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <p class="eyebrow">Dumbbells + Bench</p>
+        <h1>Upper Body Split</h1>
+      </div>
+      <button id="resetWeek" class="ghost">Reset</button>
+    </header>
 
+    <section class="stats">
+      <div>
+        <span id="completedCount">0</span>
+        <p>sets done</p>
+      </div>
+      <div>
+        <span id="todayName">Today</span>
+        <p>selected day</p>
+      </div>
+    </section>
+
+    <nav id="dayTabs"></nav>
+
+    <main>
+      <section class="day-card">
+        <div class="day-title-row">
+          <div>
+            <h2 id="dayTitle"></h2>
+            <p id="daySubtitle"></p>
+          </div>
+          <button id="markDay" class="primary">Mark Day Done</button>
+        </div>
+
+        <div id="exerciseList"></div>
+      </section>
+
+      <section class="notes-card">
+        <h3>Workout Notes</h3>
+        <textarea id="notes" placeholder="Weights used, how you felt, pump, soreness, run notes..."></textarea>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
