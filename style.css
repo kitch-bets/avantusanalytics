@@ -1,0 +1,45 @@
+:root {
+  --bg: #0b0b0f;
+  --card: #171820;
+  --card2: #20212b;
+  --text: #f5f5f7;
+  --muted: #a5a7b2;
+  --accent: #ffffff;
+  --border: rgba(255,255,255,.09);
+  --green: #38d982;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #222433 0%, var(--bg) 42%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app { max-width: 560px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 16px 30px; }
+header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+.eyebrow { color: var(--muted); margin:0 0 4px; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
+h1,h2,h3,p { margin:0; }
+h1 { font-size:32px; line-height:1; }
+button { border:0; border-radius:16px; font-weight:700; cursor:pointer; font-size:14px; min-height:44px; }
+.ghost { background: rgba(255,255,255,.08); color: var(--text); padding:0 16px; }
+.primary { background: var(--accent); color:#08080b; padding:0 14px; }
+.stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+.stats div { background: rgba(255,255,255,.07); border:1px solid var(--border); border-radius:22px; padding:16px; }
+.stats span { font-size:26px; font-weight:800; }
+.stats p { color:var(--muted); font-size:13px; margin-top:3px; }
+nav { display:flex; gap:9px; overflow-x:auto; padding:4px 0 14px; scrollbar-width:none; }
+nav::-webkit-scrollbar { display:none; }
+.tab { background: rgba(255,255,255,.08); color:var(--muted); padding:0 16px; flex:0 0 auto; }
+.tab.active { background:var(--accent); color:#08080b; }
+.day-card,.notes-card { background: rgba(23,24,32,.92); border:1px solid var(--border); border-radius:28px; padding:18px; }
+.day-title-row { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:18px; }
+.exercise { background: var(--card2); border:1px solid var(--border); border-radius:22px; padding:15px; margin-bottom:12px; }
+.exercise-top { display:flex; justify-content:space-between; margin-bottom:12px; }
+.exercise p { color:var(--muted); font-size:13px; margin-top:4px; }
+.sets { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.set-box { min-height:42px; border-radius:14px; background: rgba(255,255,255,.07); border:1px solid var(--border); color:var(--text); display:grid; place-items:center; font-weight:800; }
+.set-box.done { background: var(--green); color:#061108; }
+.notes-card { margin-top:14px; }
+textarea { width:100%; min-height:140px; border-radius:18px; border:1px solid var(--border); background: rgba(255,255,255,.07); color:var(--text); padding:14px; font:inherit; }
